@@ -1,0 +1,96 @@
+# Brazil Atlas TopoJSON
+
+Based on [Michael Bostock's us-atlas](http://github.com/mbostock/us-atlas.git), this repository is for generating [TopoJSON files](https://github.com/mbostock/topojson) for Brazilian maps.
+
+All maps are downloaded from [IBGE (Instituto Brasileiro de Geografia e Estatística)](http://www.ibge.gov.br/), the agency responsible for
+statistical, geographic, cartographic, geodetic and environmental information
+in Brazil.
+
+## Usage
+
+Install [Node.js](http://nodejs.org/), clone this repository, install the dependencies and run `make`.
+
+```bash
+git clone git@github.com:carolinabigonha/br-atlas.git
+cd br-atlas
+npm install
+make
+```
+                                   
+TopoJSON files will be generated inside ``topo/`` directory.                        
+GeoJSON files will be generated inside ``geo/`` directory.                        
+
+## More Information
+
+Running ``make`` will generate TopoJSON and GeoJSON files for Brazil and
+each of its states and counties. They are located in ``topo/`` and ``geo/`` directories.
+
+Also, several intermediate files are generated: ``zip`` and ``tmp``
+directories contain the original files downloaded and extracted from
+IBGE. If you wish to delete these extra directories (they sum up 425MB),
+run ``make clean-extra``.
+
+In addition, you can run ``make topo/br-counties.json`` for generating
+a Brazil map with counties and ``make topo/br-states.json`` for generating
+a Brazil map with states. Similarly, you may generate files for
+specific states, for example:
+``make topo/mg-counties.json`` or ``make topo/mg-states.json``
+for generating maps of Minas Gerais state.
+
+Feel free to contribute and add new types of maps.
+Additional source is available at ftp://geoftp.ibge.gov.br/mapas_interativos/.
+
+## Licence
+
+All files are under the BSD 3-Clause License, as stated in LICENCE.
+
+-----------------------------------
+
+# Atlas TopoJSON do Brasil
+
+Baseado no repositório [us-atlas](http://github.com/mbostock/us-atlas.git) do grande Michael Bostock, este é um repositório para geração de mapas TopoJSON
+do Brasil.
+
+## Modo de uso
+
+Instale [Node.js](http://nodejs.org/), baixe este repositório, instale
+as dependências e execute `make`.
+
+Todos os mapas são extraídos do banco de dados do [IBGE (Instituto Brasileiro de Geografia e Estatística)](http://www.ibge.gov.br/), fundação pública da
+administração federal brasileira.
+
+```bash
+git clone git@github.com:carolinabigonha/br-atlas.git
+cd br-atlas
+npm install
+make
+```
+
+Os arquivos TopoJSON são gerados no diretório ``topo/``.
+Os arquivos GeoJSON são gerados no diretório ``geo/``.
+
+## Mais informações
+
+Ao rodar ``make`` arquivos TopoJSON serão gerados para o Brasil e seus
+estados na pasta ``topo/``. Arquivos GeoJSON também são gerados na
+pasta ``geo/``, como sub-produto.
+
+Além disso, as pastas ``zip/`` e ``tmp/``
+contêm os arquivos originais obtidos do IBGE.
+Se desejar apagar tais pastas
+(``shp`` possui 140 MB e ``tmp`` possui 285 MB),
+execute ``make clean-extra``.
+
+Você ainda pode gerar mapas específicos, por exemplo: ``make topo/br-counties.
+json`` para gerar um mapa do Brasil e seus municípios e ``make topo/br-states.
+json`` para gerar um mapa do Brasil e seus estado. Você ainda pode gerar os
+mapas para cada estado: por exemplo, ``make topo/mg-counties.json`` ou ``make
+topo/mg-states.json`` geram arquivos TopoJSON para os municípios e para o
+estado de Minas Gerais.
+
+Sinta-se a vontade para contribuir. Ainda faltam vários mapas para serem
+incluídos. Muitos encontrados em: ftp://geoftp.ibge.gov.br/mapas_interativos/.
+
+## Licença
+
+Todos os arquivos estão disponíveis sob a Licença BSD 3-Clause License.

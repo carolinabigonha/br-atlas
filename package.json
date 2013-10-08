@@ -1,0 +1,23 @@
+{
+  "name": "br-atlas",
+  "version": "0.0.1",
+  "description": "TopoJSON from the Brazilian Atlas",
+  "keywords": [
+    "topojson",
+    "geojson",
+    "shapefile"
+  ],
+  "author": {
+    "name": "Carolina Bigonha",
+    "url": "http://carolinabigonha.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/carolinabigonha/br-atlas.git"
+  },
+  "devDependencies": {
+    "d3": "3",
+    "shapefile": "0.1",
+    "topojson": "1"
+  }
+}
