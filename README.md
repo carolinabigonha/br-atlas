@@ -74,9 +74,25 @@ All files are under the BSD 3-Clause License, as stated in LICENCE.
 Baseado no repositório [us-atlas](http://github.com/mbostock/us-atlas.git) do grande Michael Bostock, este é um repositório para geração de mapas TopoJSON
 do Brasil.
 
+## Dependências
+
+Este repositório tem como dependência o [Node.js](http://nodejs.org/).
+Pode-se instalar o Node.js por meio do código fonte ou por instaladores
+para os diferentes sistemas operacionais, disponíveis na
+[página de instalação do Node.js](http://nodejs.org/download/).
+
+Outra dependência deste projeto é
+[Geospatial Data Abstraction Library (GDAL)](http://www.gdal.org/),
+utilizada para a conversão dos arquivos.
+
+Para instalar GDAL no Mac, utilize o [Homebrew](http://brew.sh/):
+``` brew install gdal ```.
+
+Para instalar no Linux, execute: ``` sudo apt-get install gdal-bin ```
+
 ## Modo de uso
 
-Instale [Node.js](http://nodejs.org/), baixe este repositório, instale
+Realize o download deste repositório, instale
 as dependências e execute `make`.
 
 Todos os mapas são extraídos do banco de dados do [IBGE (Instituto Brasileiro de Geografia e Estatística)](http://www.ibge.gov.br/), fundação pública da
