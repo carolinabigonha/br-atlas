@@ -6,9 +6,32 @@ All maps are downloaded from [IBGE (Instituto Brasileiro de Geografia e Estatís
 statistical, geographic, cartographic, geodetic and environmental information
 in Brazil.
 
+## Dependencies
+
+Firstly, this repository depends on [Node.js](http://nodejs.org/).
+You may install Node.js using the source code or a pre-built
+installer for your platform, all available at
+[Node.js download page](http://nodejs.org/download/).
+
+The other dependency is the
+[Geospatial Data Abstraction Library (GDAL)](http://www.gdal.org/),
+used for converting the files.
+
+For installing GDAL on Mac, you may use [Homebrew](http://brew.sh/):
+
+```
+brew install gdal
+```
+
+For installing it on Linux, run:
+
+```
+sudo apt-get install gdal-bin
+```
+
 ## Usage
 
-Install [Node.js](http://nodejs.org/), clone this repository, install the dependencies and run `make`.
+Clone this repository, install the dependencies and run `make`.
 
 ```bash
 git clone git@github.com:carolinabigonha/br-atlas.git
@@ -16,9 +39,9 @@ cd br-atlas
 npm install
 make
 ```
-                                   
-TopoJSON files will be generated inside ``topo/`` directory.                        
-GeoJSON files will be generated inside ``geo/`` directory.                        
+
+TopoJSON files will be generated inside ``topo/`` directory.
+GeoJSON files will be generated inside ``geo/`` directory.
 
 ## More Information
 
