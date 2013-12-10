@@ -17,11 +17,15 @@ all: \
 	node_modules \
 	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -counties.json,$(STATES))) \
-	chmod +x scripts/merge.py
+	permission
 
 # Install dependencies
 node_modules:
 	npm install
+
+# Add execute permission
+permission:
+	chmod +x scripts/merge.py
 
 # .SECONDARY with no dependencies marks all file targets mentioned in the makefile as secondary.
 .SECONDARY:
@@ -40,6 +44,8 @@ tmp/%/: zip/%.zip
 	rm -rf $(basename $@)
 	mkdir -p $(dir $@)
 	unzip -d tmp $<
+	$(eval STATE := $(dir $@)$(shell echo $* | tr '[:lower:]' '[:upper:]'))
+	[ -d $(STATE) ] && mv -f $(STATE) $@
 
 # -- Generate ESRI Shapefile files
 
