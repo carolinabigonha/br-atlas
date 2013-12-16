@@ -107,6 +107,10 @@ topo/br-states.json: $(addprefix geo/,$(addsuffix -state.json,$(STATES)))
 	./scripts/merge.py $@ > $@.merged
 	mv $@.merged $@
 
+# Simplified version of state file
+topo/br-states.min.json: topo/br-states.json
+	$(TOPOJSON) -p --simplify-proportion=.2 -o $@ -- $^
+
 # -- Clean
 
 # Clean temporary files
