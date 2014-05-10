@@ -46,7 +46,7 @@ GeoJSON files will be generated inside ``geo/`` directory.
 ## More Information
 
 Running ``make`` will generate TopoJSON and GeoJSON files for Brazil and
-each of its states and counties. They are located in ``topo/`` and ``geo/`` directories.
+each of its states and cities. They are located in ``topo/`` and ``geo/`` directories.
 
 Also, several intermediate files are generated: ``zip`` and ``tmp``
 directories contain the original files downloaded and extracted from
