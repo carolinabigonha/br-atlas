@@ -23,6 +23,12 @@ For installing GDAL on Mac, you may use [Homebrew](http://brew.sh/):
 brew install gdal
 ```
 
+Or [Mac Ports](macports.org) (still on Mac)
+
+```
+port install gdal
+```
+
 For installing it on Linux, run:
 
 ```
@@ -34,7 +40,7 @@ sudo apt-get install gdal-bin
 Clone this repository, install the dependencies and run `make`.
 
 ```bash
-git clone git@github.com:carolinabigonha/br-atlas.git
+git clone https://github.com/carolinabigonha/br-atlas.git
 cd br-atlas
 npm install
 make
@@ -86,9 +92,21 @@ Outra dependência deste projeto é
 utilizada para a conversão dos arquivos.
 
 Para instalar GDAL no Mac, utilize o [Homebrew](http://brew.sh/):
-``` brew install gdal ```.
+``` 
+brew install gdal 
+```
 
-Para instalar no Linux, execute: ``` sudo apt-get install gdal-bin ```
+Ou [Mac Ports](http://macports.org/)
+
+``` 
+port install gdal 
+```
+
+Para instalar no Linux, execute: 
+
+``` 
+sudo apt-get install gdal-bin 
+```
 
 ## Modo de uso
 
@@ -99,7 +117,7 @@ Todos os mapas são extraídos do banco de dados do [IBGE (Instituto Brasileiro 
 administração federal brasileira.
 
 ```bash
-git clone git@github.com:carolinabigonha/br-atlas.git
+git clone https://github.com/carolinabigonha/br-atlas.git
 cd br-atlas
 npm install
 make
