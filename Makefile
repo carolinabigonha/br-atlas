@@ -15,8 +15,10 @@ STATES = \
 
 all: \
 	node_modules \
-	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -counties.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -micro.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -meso.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
 	permission
 
 # Install dependencies
@@ -58,6 +60,16 @@ shp/%/counties.shp: tmp/%/
 	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MUE250GC_SIR.dbf
 	touch $@
 
+shp/%/micro.shp: tmp/%/
+	mkdir -p $(dir $@)
+	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MIE250GC_SIR.dbf
+	touch $@
+
+shp/%/meso.shp: tmp/%/
+	mkdir -p $(dir $@)
+	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MEE250GC_SIR.dbf
+	touch $@
+
 shp/%/state.shp: tmp/%/
 	mkdir -p $(dir $@)
 	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*UFE250GC_SIR.dbf
@@ -72,6 +84,20 @@ geo/%-counties.json: tmp/%/
 	mv $@.utf8 $@
 	touch $@
 
+geo/%-micro.json: tmp/%/
+	mkdir -p $(dir $@)
+	ogr2ogr -f GeoJSON $@ tmp/$*/*MIE250GC_SIR.dbf
+	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
+	mv $@.utf8 $@
+	touch $@
+
+geo/%-meso.json: tmp/%/
+	mkdir -p $(dir $@)
+	ogr2ogr -f GeoJSON $@ tmp/$*/*MEE250GC_SIR.dbf
+	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
+	mv $@.utf8 $@
+	touch $@
+
 geo/%-state.json: tmp/%/
 	mkdir -p $(dir $@)
 	ogr2ogr -f GeoJSON $@ tmp/$*/*UFE250GC_SIR.dbf
@@ -79,19 +105,33 @@ geo/%-state.json: tmp/%/
 	mv $@.utf8 $@
 	touch $@
 
-# -- Generating TopoJSON files
+# -- Generating TopoJSON files for each state
 
-# For individual counties
+# For individual states, county level
 topo/%-counties.json: geo/%-counties.json
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ counties=$^
 	touch $@
 
-# For individual states:
+# For individual states, micro-region level
+topo/%-micro.json: geo/%-micro.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_MICRO -p name=NM_MICRO -o $@ micro=$^
+	touch $@
+
+# For individual states, meso-region level
+topo/%-meso.json: geo/%-meso.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_MESO -p name=NM_MESO -o $@ meso=$^
+	touch $@
+
+# For individual states, state level:
 topo/%-state.json: geo/%-state.json
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=CD_GEOCODU -p name=NM_ESTADO -p region=NM_REGIAO -o $@ state=$^
 	touch $@
+
+# -- Generating TopoJSON files for Brazil
 
 # For Brazil with counties
 topo/br-counties.json: $(addprefix geo/,$(addsuffix -counties.json,$(STATES)))
