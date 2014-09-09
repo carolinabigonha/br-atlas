@@ -49,58 +49,32 @@ tmp/%/: zip/%.zip
 	$(eval STATE := $(dir $@)$(shell echo $* | tr '[:lower:]' '[:upper:]'))
 	[ -d $(STATE) ] && mv -f $(STATE) $@
 
-# -- Generate ESRI Shapefile files
-
-# IBGE encodes its data using SIRGAS2000 and the original shapefile
-# available for download is not supported by ogr2ogr.
-# So I use the .dbf file to generate a ESRI Shapefile which is
-# compatible with ogr2ogr.
-shp/%/counties.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MUE250GC_SIR.dbf
-	touch $@
-
-shp/%/micro.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MIE250GC_SIR.dbf
-	touch $@
-
-shp/%/meso.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MEE250GC_SIR.dbf
-	touch $@
-
-shp/%/state.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*UFE250GC_SIR.dbf
-	touch $@
-
 # -- Generate GeoJSON files
 
 geo/%-counties.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MUE250GC_SIR.dbf
+	ogr2ogr -f GeoJSON $@ tmp/$*/*MUE250GC_SIR.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
 
 geo/%-micro.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MIE250GC_SIR.dbf
+	ogr2ogr -f GeoJSON $@ tmp/$*/*MIE250GC_SIR.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
 
 geo/%-meso.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MEE250GC_SIR.dbf
+	ogr2ogr -f GeoJSON $@ tmp/$*/*MEE250GC_SIR.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
 
 geo/%-state.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*UFE250GC_SIR.dbf
+	ogr2ogr -f GeoJSON $@ tmp/$*/*UFE250GC_SIR.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
