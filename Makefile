@@ -37,44 +37,37 @@ permission:
 # Downloads the zip files
 # ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
 zip/%.zip:
+	$(eval STATE := $(patsubst %-counties,%,$*))
+	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
+	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
+	$(eval STATE := $(patsubst %-state,%,$(STATE)))
+	$(eval FILENAME := $(subst -counties,_municipios,$*))
+	$(eval FILENAME := $(subst -micro,_microrregioes,$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/$(notdir $@)' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
 tmp/%/: zip/%.zip
 	rm -rf $(basename $@)
 	mkdir -p $(dir $@)
-	unzip -d tmp $<
-	$(eval STATE := $(dir $@)$(shell echo $* | tr '[:lower:]' '[:upper:]'))
-	[ -d $(STATE) ] && mv -f $(STATE) $@
+	unzip -d tmp/$* $<
+	$(eval REGION := $(patsubst %-counties,counties,$*))
+	$(eval REGION := $(patsubst %-micro,micro,$*))
+	$(eval REGION := $(patsubst %-meso,meso,$*))
+	$(eval REGION := $(patsubst %-state,state,$*))
+	mv $@*.shp $@map.shp
+	mv $@*.shx $@map.shx
+	mv $@*.dbf $@map.dbf
+	mv $@*.prj $@map.prj
 
 # -- Generate GeoJSON files
 
-geo/%-counties.json: tmp/%/
+geo/%.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MUE250GC_SIR.shp
-	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
-	mv $@.utf8 $@
-	touch $@
-
-geo/%-micro.json: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MIE250GC_SIR.shp
-	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
-	mv $@.utf8 $@
-	touch $@
-
-geo/%-meso.json: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MEE250GC_SIR.shp
-	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
-	mv $@.utf8 $@
-	touch $@
-
-geo/%-state.json: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*UFE250GC_SIR.shp
+	ogr2ogr -f GeoJSON $@ tmp/$*/map.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
