@@ -58,10 +58,10 @@ tmp/%/: zip/%.zip
 	$(eval REGION := $(patsubst %-micro,micro,$*))
 	$(eval REGION := $(patsubst %-meso,meso,$*))
 	$(eval REGION := $(patsubst %-state,state,$*))
-	mv $@*.shp $@map.shp
-	mv $@*.shx $@map.shx
-	mv $@*.dbf $@map.dbf
-	mv $@*.prj $@map.prj
+	mv $@/*.shp $@/map.shp
+	mv $@/*.shx $@/map.shx
+	mv $@/*.dbf $@/map.dbf
+	mv $@/*.prj $@/map.prj
 
 # -- Generate GeoJSON files
 
