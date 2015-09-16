@@ -15,7 +15,7 @@ STATES = \
 
 all: \
 	node_modules \
-	$(addprefix topo/,$(addsuffix -counties.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -municipalities.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -micro.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -meso.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
@@ -37,11 +37,11 @@ permission:
 # Downloads the zip files
 # ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
 zip/%.zip:
-	$(eval STATE := $(patsubst %-counties,%,$*))
+	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
 	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
-	$(eval FILENAME := $(subst -counties,_municipios,$*))
+	$(eval FILENAME := $(subst -municipalities,_municipios,$*))
 	$(eval FILENAME := $(subst -micro,_microrregioes,$(FILENAME)))
 	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
 	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
@@ -54,7 +54,7 @@ tmp/%/: zip/%.zip
 	rm -rf $(basename $@)
 	mkdir -p $(dir $@)
 	unzip -d tmp/$* $<
-	$(eval REGION := $(patsubst %-counties,counties,$*))
+	$(eval REGION := $(patsubst %-municipalities,municipalities,$*))
 	$(eval REGION := $(patsubst %-micro,micro,$*))
 	$(eval REGION := $(patsubst %-meso,meso,$*))
 	$(eval REGION := $(patsubst %-state,state,$*))
@@ -74,10 +74,10 @@ geo/%.json: tmp/%/
 
 # -- Generating TopoJSON files for each state
 
-# For individual states, county level
-topo/%-counties.json: geo/%-counties.json
+# For individual states, municipality level
+topo/%-municipalities.json: geo/%-municipalities.json
 	mkdir -p $(dir $@)
-	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ counties=$^
+	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ municipalities=$^
 	touch $@
 
 # For individual states, micro-region level
@@ -100,8 +100,8 @@ topo/%-state.json: geo/%-state.json
 
 # -- Generating TopoJSON files for Brazil
 
-# For Brazil with counties
-topo/br-counties.json: $(addprefix geo/,$(addsuffix -counties.json,$(STATES)))
+# For Brazil with municipalities
+topo/br-municipalities.json: $(addprefix geo/,$(addsuffix -municipalities.json,$(STATES)))
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ -- $^
 	./scripts/merge.py $@ > $@.merged

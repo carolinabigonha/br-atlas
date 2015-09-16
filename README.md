@@ -52,18 +52,18 @@ GeoJSON files will be generated inside ``geo/`` directory.
 ## More Information
 
 Running ``make`` will generate TopoJSON and GeoJSON files for Brazil and
-each of its states and counties. They are located in ``topo/`` and ``geo/`` directories.
+each of its states and municipalities. They are located in ``topo/`` and ``geo/`` directories.
 
 Also, several intermediate files are generated: ``zip`` and ``tmp``
 directories contain the original files downloaded and extracted from
 IBGE. If you wish to delete these extra directories (they sum up 425MB),
 run ``make clean-extra``.
 
-In addition, you can run ``make topo/br-counties.json`` for generating
-a Brazil map with counties and ``make topo/br-states.json`` for generating
+In addition, you can run ``make topo/br-municipalities.json`` for generating
+a Brazil map with municipalities and ``make topo/br-states.json`` for generating
 a Brazil map with states. Similarly, you may generate files for
 specific states, for example:
-``make topo/mg-counties.json`` or ``make topo/mg-states.json``
+``make topo/mg-municipalities.json`` or ``make topo/mg-states.json``
 for generating maps of Minas Gerais state.
 
 Feel free to contribute and add new types of maps.
@@ -138,10 +138,10 @@ Se desejar apagar tais pastas
 (``shp`` possui 140 MB e ``tmp`` possui 285 MB),
 execute ``make clean-extra``.
 
-Você ainda pode gerar mapas específicos, por exemplo: ``make topo/br-counties.
+Você ainda pode gerar mapas específicos, por exemplo: ``make topo/br-municipalities.
 json`` para gerar um mapa do Brasil e seus municípios e ``make topo/br-states.
 json`` para gerar um mapa do Brasil e seus estado. Você ainda pode gerar os
-mapas para cada estado: por exemplo, ``make topo/mg-counties.json`` ou ``make
+mapas para cada estado: por exemplo, ``make topo/mg-municipalities.json`` ou ``make
 topo/mg-states.json`` geram arquivos TopoJSON para os municípios e para o
 estado de Minas Gerais.
 
