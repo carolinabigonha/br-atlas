@@ -15,8 +15,10 @@ STATES = \
 
 all: \
 	node_modules \
+	$(addprefix topo/,$(addsuffix -municipalities.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -micro.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -meso.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
-	$(addprefix topo/,$(addsuffix -counties.json,$(STATES))) \
 	permission
 
 # Install dependencies
@@ -35,66 +37,71 @@ permission:
 # Downloads the zip files
 # ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
 zip/%.zip:
+	$(eval STATE := $(patsubst %-municipalities,%,$*))
+	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
+	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
+	$(eval STATE := $(patsubst %-state,%,$(STATE)))
+	$(eval FILENAME := $(subst -municipalities,_municipios,$*))
+	$(eval FILENAME := $(subst -micro,_microrregioes,$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/$(notdir $@)' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
 tmp/%/: zip/%.zip
 	rm -rf $(basename $@)
 	mkdir -p $(dir $@)
-	unzip -d tmp $<
-	$(eval STATE := $(dir $@)$(shell echo $* | tr '[:lower:]' '[:upper:]'))
-	[ -d $(STATE) ] && mv -f $(STATE) $@
-
-# -- Generate ESRI Shapefile files
-
-# IBGE encodes its data using SIRGAS2000 and the original shapefile
-# available for download is not supported by ogr2ogr.
-# So I use the .dbf file to generate a ESRI Shapefile which is
-# compatible with ogr2ogr.
-shp/%/counties.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*MUE250GC_SIR.dbf
-	touch $@
-
-shp/%/state.shp: tmp/%/
-	mkdir -p $(dir $@)
-	ogr2ogr -f 'ESRI Shapefile' $@ tmp/$*/*UFE250GC_SIR.dbf
-	touch $@
+	unzip -d tmp/$* $<
+	$(eval REGION := $(patsubst %-municipalities,municipalities,$*))
+	$(eval REGION := $(patsubst %-micro,micro,$*))
+	$(eval REGION := $(patsubst %-meso,meso,$*))
+	$(eval REGION := $(patsubst %-state,state,$*))
+	mv $@/*.shp $@/map.shp
+	mv $@/*.shx $@/map.shx
+	mv $@/*.dbf $@/map.dbf
+	mv $@/*.prj $@/map.prj
 
 # -- Generate GeoJSON files
 
-geo/%-counties.json: tmp/%/
+geo/%.json: tmp/%/
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*MUE250GC_SIR.dbf
+	ogr2ogr -f GeoJSON $@ tmp/$*/map.shp
 	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
 	mv $@.utf8 $@
 	touch $@
 
-geo/%-state.json: tmp/%/
+# -- Generating TopoJSON files for each state
+
+# For individual states, municipality level
+topo/%-municipalities.json: geo/%-municipalities.json
 	mkdir -p $(dir $@)
-	ogr2ogr -f GeoJSON $@ tmp/$*/*UFE250GC_SIR.dbf
-	iconv -f ISO-8859-1 -t UTF-8 $@ > $@.utf8
-	mv $@.utf8 $@
+	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ municipalities=$^
 	touch $@
 
-# -- Generating TopoJSON files
-
-# For individual counties
-topo/%-counties.json: geo/%-counties.json
+# For individual states, micro-region level
+topo/%-micro.json: geo/%-micro.json
 	mkdir -p $(dir $@)
-	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ counties=$^
+	$(TOPOJSON) --id-property=NM_MICRO -p name=NM_MICRO -o $@ micro=$^
 	touch $@
 
-# For individual states:
+# For individual states, meso-region level
+topo/%-meso.json: geo/%-meso.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_MESO -p name=NM_MESO -o $@ meso=$^
+	touch $@
+
+# For individual states, state level:
 topo/%-state.json: geo/%-state.json
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=CD_GEOCODU -p name=NM_ESTADO -p region=NM_REGIAO -o $@ state=$^
 	touch $@
 
-# For Brazil with counties
-topo/br-counties.json: $(addprefix geo/,$(addsuffix -counties.json,$(STATES)))
+# -- Generating TopoJSON files for Brazil
+
+# For Brazil with municipalities
+topo/br-municipalities.json: $(addprefix geo/,$(addsuffix -municipalities.json,$(STATES)))
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=CD_GEOCODM -p name=NM_MUNICIP -o $@ -- $^
 	./scripts/merge.py $@ > $@.merged
