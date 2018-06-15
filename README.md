@@ -73,6 +73,13 @@ Additional source is available at ftp://geoftp.ibge.gov.br/mapas_interativos/.
 
 All files are under the BSD 3-Clause License, as stated in LICENCE.
 
+## Contributors
+Carolina Bigonha <carolinabigonha@gmail.com>
+Marcelo Pontes <balaum@gmail.com>
+João Guilherme <joaaogui@gmail.com>
+Victor Navarro <victor.matias.navarro@gmail.com>
+Nihey Takizawa <nihey.takizawa@gmail.com>
+
 -----------------------------------
 
 # Atlas TopoJSON do Brasil
@@ -151,3 +158,10 @@ incluídos. Muitos encontrados em: ftp://geoftp.ibge.gov.br/mapas_interativos/.
 ## Licença
 
 Todos os arquivos estão disponíveis sob a Licença BSD 3-Clause License.
+
+## Contribuidores
+Carolina Bigonha <carolinabigonha@gmail.com>
+Marcelo Pontes <balaum@gmail.com>
+João Guilherme <joaaogui@gmail.com>
+Victor Navarro <victor.matias.navarro@gmail.com>
+Nihey Takizawa <nihey.takizawa@gmail.com>
