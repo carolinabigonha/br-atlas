@@ -35,7 +35,7 @@ permission:
 # -- Downloading and extracting IBGE files
 
 # Downloads the zip files
-# ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
+# ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2016/
 zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
@@ -46,7 +46,7 @@ zip/%.zip:
 	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
 	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2010/$(STATE)/$(FILENAME).zip' -o $@.download
+	curl "ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2016/UFs/$(shell echo $(STATE) | tr a-z A-Z)/$(FILENAME).zip" -o $@.download
 	mv $@.download $@
 
 # Extracts the files
