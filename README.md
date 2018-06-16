@@ -145,12 +145,7 @@ Se desejar apagar tais pastas
 (``shp`` possui 140 MB e ``tmp`` possui 285 MB),
 execute ``make clean-extra``.
 
-Você ainda pode gerar mapas específicos, por exemplo: ``make topo/br-municipalities.
-json`` para gerar um mapa do Brasil e seus municípios e ``make topo/br-states.
-json`` para gerar um mapa do Brasil e seus estado. Você ainda pode gerar os
-mapas para cada estado: por exemplo, ``make topo/mg-municipalities.json`` ou ``make
-topo/mg-states.json`` geram arquivos TopoJSON para os municípios e para o
-estado de Minas Gerais.
+Você ainda pode gerar mapas específicos, por exemplo: ``make topo/br-municipalities.json`` para gerar um mapa do Brasil e seus municípios e ``make topo/br-states.json`` para gerar um mapa do Brasil e seus estado. Você ainda pode gerar os mapas para cada estado: por exemplo, ``make topo/mg-municipalities.json`` ou ``make topo/mg-states.json`` geram arquivos TopoJSON para os municípios e para o estado de Minas Gerais.
 
 Sinta-se a vontade para contribuir. Ainda faltam vários mapas para serem
 incluídos. Muitos encontrados em: ftp://geoftp.ibge.gov.br/mapas_interativos/.
