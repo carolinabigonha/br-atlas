@@ -5,13 +5,13 @@
 # -- Configurations
 
 # TopoJSON configurations
-TOPOJSON = node --max_old_space_size=8192 node_modules/.bin/topojson -q 1e6
+TOPOJSON = node --max_old_space_size=8192 node_modules/topojson-server/bin/geo2topo -q 1e6
 
 # All Brazilian states
 STATES = \
-	ac al am ap ba ce df es go ma \
-	mg ms mt pa pb pe pi pr rj rn \
-	ro rr rs sc se sp to
+	AC AL AM AP BA CE DF ES GO MA \
+	MG MS MT PA PB PE PI PR RJ RN \
+	RO RR RS SC SE SP TO
 
 all: \
 	node_modules \
@@ -35,18 +35,18 @@ permission:
 # -- Downloading and extracting IBGE files
 
 # Downloads the zip files
-# ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
+# ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/
 zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
 	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
-	$(eval FILENAME := $(subst -municipalities,_municipios,$*))
-	$(eval FILENAME := $(subst -micro,_microrregioes,$(FILENAME)))
-	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
-	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
+	$(eval FILENAME := $(subst -municipalities,_Municipios_2020,$*))
+	$(eval FILENAME := $(subst -micro,_Microrregioes_2020,$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_Mesorregioes_2020,$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_UF_2020,$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2010/$(STATE)/$(FILENAME).zip' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
