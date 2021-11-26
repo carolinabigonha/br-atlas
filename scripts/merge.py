@@ -1,10 +1,11 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
 
 # Merges the 'GeometryCollection' objects into the
 
 import json
 import sys
 import re
+
 
 def merge(data):
 
@@ -32,7 +33,8 @@ def merge(data):
 
     return topo
 
+
 if __name__ == '__main__':
     in_file = open(sys.argv[1], 'r')
     data = json.loads(in_file.readline())
-    print json.dumps(merge(data))
+    print(json.dumps(merge(data)))

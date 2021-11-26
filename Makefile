@@ -18,6 +18,8 @@ all: \
 	$(addprefix topo/,$(addsuffix -municipalities.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -micro.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -meso.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -immediate.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -intermediate.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
 	permission
 
@@ -40,10 +42,14 @@ zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
 	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
+	$(eval STATE := $(patsubst %-immediate,%,$(STATE)))
+	$(eval STATE := $(patsubst %-intermediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
 	$(eval FILENAME := $(subst -municipalities,_Municipios_2020,$*))
 	$(eval FILENAME := $(subst -micro,_Microrregioes_2020,$(FILENAME)))
 	$(eval FILENAME := $(subst -meso,_Mesorregioes_2020,$(FILENAME)))
+	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_2020,$(FILENAME)))
+	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_2020,$(FILENAME)))
 	$(eval FILENAME := $(subst -state,_UF_2020,$(FILENAME)))
 	mkdir -p $(dir $@)
 	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
@@ -57,6 +63,8 @@ tmp/%/: zip/%.zip
 	$(eval REGION := $(patsubst %-municipalities,municipalities,$*))
 	$(eval REGION := $(patsubst %-micro,micro,$*))
 	$(eval REGION := $(patsubst %-meso,meso,$*))
+	$(eval REGION := $(patsubst %-immediate,immediate,$*))
+	$(eval REGION := $(patsubst %-intermediate,intermediate,$*))
 	$(eval REGION := $(patsubst %-state,state,$*))
 	mv $@/*.shp $@/map.shp
 	mv $@/*.shx $@/map.shx
@@ -90,6 +98,18 @@ topo/%-micro.json: geo/%-micro.json
 topo/%-meso.json: geo/%-meso.json
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=NM_MESO -p name=NM_MESO -o $@ meso=$^
+	touch $@
+
+# For individual states, immediate-region level
+topo/%-immediate.json: geo/%-immediate.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_IMEDIATA -p name=NM_IMEDIATA -o $@ immediate=$^
+	touch $@
+
+# For individual states, intermediate-region level
+topo/%-intermediate.json: geo/%-intermediate.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_INTERMEDIARIA -p name=NM_INTERMEDIARIA -o $@ intermediate=$^
 	touch $@
 
 # For individual states, state level:
