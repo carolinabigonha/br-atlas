@@ -13,7 +13,8 @@ def merge(data):
     objects[u'type'] = u'GeometryCollection'
     objects[u'geometries'] = []
 
-    base_type = re.match('\w\w-(\w+)', data[u'objects'].keys()[0]).group(1)
+    base_type = re.match(
+        '\w\w-(\w+)', list(data[u'objects'].keys())[0]).group(1)
 
     if base_type == 'state':
         object_type = 'states'

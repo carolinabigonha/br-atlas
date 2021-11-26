@@ -36,7 +36,7 @@ permission:
 
 # -- Downloading and extracting IBGE files
 
-# Downloads the zip files
+# Downloads States zip files
 # ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/
 zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
