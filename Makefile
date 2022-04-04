@@ -45,12 +45,12 @@ zip/%.zip:
 	$(eval STATE := $(patsubst %-immediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-intermediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
-	$(eval FILENAME := $(subst -municipalities,_Municipios_2020,$*))
-	$(eval FILENAME := $(subst -micro,_Microrregioes_2020,$(FILENAME)))
-	$(eval FILENAME := $(subst -meso,_Mesorregioes_2020,$(FILENAME)))
-	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_2020,$(FILENAME)))
-	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_2020,$(FILENAME)))
-	$(eval FILENAME := $(subst -state,_UF_2020,$(FILENAME)))
+	$(eval FILENAME := $(subst -municipalities,_Municipios_2021,$*))
+	$(eval FILENAME := $(subst -micro,_Microrregioes_2021,$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_Mesorregioes_2021,$(FILENAME)))
+	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_2021,$(FILENAME)))
+	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_2021,$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_UF_2021,$(FILENAME)))
 	mkdir -p $(dir $@)
 	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2021/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
