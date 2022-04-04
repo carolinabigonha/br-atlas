@@ -37,7 +37,7 @@ permission:
 # -- Downloading and extracting IBGE files
 
 # Downloads States zip files
-# ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/
+# ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2021/UFs/
 zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
@@ -52,7 +52,7 @@ zip/%.zip:
 	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_2020,$(FILENAME)))
 	$(eval FILENAME := $(subst -state,_UF_2020,$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2020/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2021/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
