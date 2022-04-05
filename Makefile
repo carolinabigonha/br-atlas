@@ -5,19 +5,24 @@
 # -- Configurations
 
 # TopoJSON configurations
-TOPOJSON = node --max_old_space_size=8192 node_modules/.bin/topojson -q 1e6
+TOPOJSON = node --max_old_space_size=8192 node_modules/topojson-server/bin/geo2topo -q 1e6
 
 # All Brazilian states
 STATES = \
-	ac al am ap ba ce df es go ma \
-	mg ms mt pa pb pe pi pr rj rn \
-	ro rr rs sc se sp to
+	AC AL AM AP BA CE DF ES GO MA \
+	MG MS MT PA PB PE PI PR RJ RN \
+	RO RR RS SC SE SP TO
+
+# Maps year
+YEAR = 2021
 
 all: \
 	node_modules \
 	$(addprefix topo/,$(addsuffix -municipalities.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -micro.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -meso.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -immediate.json,$(STATES))) \
+	$(addprefix topo/,$(addsuffix -intermediate.json,$(STATES))) \
 	$(addprefix topo/,$(addsuffix -state.json,$(STATES))) \
 	permission
 
@@ -34,19 +39,23 @@ permission:
 
 # -- Downloading and extracting IBGE files
 
-# Downloads the zip files
-# ftp://geoftp.ibge.gov.br/malhas_digitais/municipio_2010/
+# Downloads States zip files
+# ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2021/UFs/
 zip/%.zip:
 	$(eval STATE := $(patsubst %-municipalities,%,$*))
 	$(eval STATE := $(patsubst %-micro,%,$(STATE)))
 	$(eval STATE := $(patsubst %-meso,%,$(STATE)))
+	$(eval STATE := $(patsubst %-immediate,%,$(STATE)))
+	$(eval STATE := $(patsubst %-intermediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
-	$(eval FILENAME := $(subst -municipalities,_municipios,$*))
-	$(eval FILENAME := $(subst -micro,_microrregioes,$(FILENAME)))
-	$(eval FILENAME := $(subst -meso,_mesorregioes,$(FILENAME)))
-	$(eval FILENAME := $(subst -state,_unidades_da_federacao,$(FILENAME)))
+	$(eval FILENAME := $(subst -municipalities,_Municipios_$(YEAR),$*))
+	$(eval FILENAME := $(subst -micro,_Microrregioes_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_Mesorregioes_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_UF_$(YEAR),$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2010/$(STATE)/$(FILENAME).zip' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_$(YEAR)/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
@@ -57,6 +66,8 @@ tmp/%/: zip/%.zip
 	$(eval REGION := $(patsubst %-municipalities,municipalities,$*))
 	$(eval REGION := $(patsubst %-micro,micro,$*))
 	$(eval REGION := $(patsubst %-meso,meso,$*))
+	$(eval REGION := $(patsubst %-immediate,immediate,$*))
+	$(eval REGION := $(patsubst %-intermediate,intermediate,$*))
 	$(eval REGION := $(patsubst %-state,state,$*))
 	mv $@/*.shp $@/map.shp
 	mv $@/*.shx $@/map.shx
@@ -90,6 +101,18 @@ topo/%-micro.json: geo/%-micro.json
 topo/%-meso.json: geo/%-meso.json
 	mkdir -p $(dir $@)
 	$(TOPOJSON) --id-property=NM_MESO -p name=NM_MESO -o $@ meso=$^
+	touch $@
+
+# For individual states, immediate-region level
+topo/%-immediate.json: geo/%-immediate.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_IMEDIATA -p name=NM_IMEDIATA -o $@ immediate=$^
+	touch $@
+
+# For individual states, intermediate-region level
+topo/%-intermediate.json: geo/%-intermediate.json
+	mkdir -p $(dir $@)
+	$(TOPOJSON) --id-property=NM_INTERMEDIARIA -p name=NM_INTERMEDIARIA -o $@ intermediate=$^
 	touch $@
 
 # For individual states, state level:

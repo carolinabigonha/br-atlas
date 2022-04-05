@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
 
 # Merges the 'GeometryCollection' objects into the
 
@@ -6,13 +6,15 @@ import json
 import sys
 import re
 
+
 def merge(data):
 
     objects = {}
     objects[u'type'] = u'GeometryCollection'
     objects[u'geometries'] = []
 
-    base_type = re.match('\w\w-(\w+)', data[u'objects'].keys()[0]).group(1)
+    base_type = re.match(
+        '\w\w-(\w+)', list(data[u'objects'].keys())[0]).group(1)
 
     if base_type == 'state':
         object_type = 'states'
@@ -32,7 +34,8 @@ def merge(data):
 
     return topo
 
+
 if __name__ == '__main__':
     in_file = open(sys.argv[1], 'r')
     data = json.loads(in_file.readline())
-    print json.dumps(merge(data))
+    print(json.dumps(merge(data)))

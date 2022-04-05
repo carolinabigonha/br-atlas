@@ -7,3 +7,5 @@ topo
 node_modules
 *pyc
 .DS_Store
+package-lock.json
+.vscode

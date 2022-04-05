@@ -16,8 +16,8 @@
     "url": "http://github.com/carolinabigonha/br-atlas.git"
   },
   "devDependencies": {
-    "d3": "3",
-    "shapefile": "0.1",
-    "topojson": "1"
+    "d3": "7.1",
+    "shapefile": "0.6",
+    "topojson-server": "3"
   }
 }
