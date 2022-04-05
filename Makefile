@@ -13,6 +13,9 @@ STATES = \
 	MG MS MT PA PB PE PI PR RJ RN \
 	RO RR RS SC SE SP TO
 
+# Maps year
+YEAR = 2021
+
 all: \
 	node_modules \
 	$(addprefix topo/,$(addsuffix -municipalities.json,$(STATES))) \
@@ -45,14 +48,14 @@ zip/%.zip:
 	$(eval STATE := $(patsubst %-immediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-intermediate,%,$(STATE)))
 	$(eval STATE := $(patsubst %-state,%,$(STATE)))
-	$(eval FILENAME := $(subst -municipalities,_Municipios_2021,$*))
-	$(eval FILENAME := $(subst -micro,_Microrregioes_2021,$(FILENAME)))
-	$(eval FILENAME := $(subst -meso,_Mesorregioes_2021,$(FILENAME)))
-	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_2021,$(FILENAME)))
-	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_2021,$(FILENAME)))
-	$(eval FILENAME := $(subst -state,_UF_2021,$(FILENAME)))
+	$(eval FILENAME := $(subst -municipalities,_Municipios_$(YEAR),$*))
+	$(eval FILENAME := $(subst -micro,_Microrregioes_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -meso,_Mesorregioes_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -immediate,_RG_Imediatas_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -intermediate,_RG_Intermediarias_$(YEAR),$(FILENAME)))
+	$(eval FILENAME := $(subst -state,_UF_$(YEAR),$(FILENAME)))
 	mkdir -p $(dir $@)
-	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2021/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
+	curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_$(YEAR)/UFs/$(STATE)/$(FILENAME).zip' -o $@.download
 	mv $@.download $@
 
 # Extracts the files
